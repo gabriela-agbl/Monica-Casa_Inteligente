@@ -4,3 +4,9 @@ Imagine chegar em casa e ela já saber o que você precisa. Mônica é o painel 
 ## "Just Monika." 💚
 
 📄 Para conferir a especificação completa de requisitos e arquitetura do projeto, acesse a [Documentação do Sistema](./docs/DOCUMENTACAO.md).
+
+## 📊 Modelagem do Banco de Dados
+![DER do Mônica](./docs/database/modelagem-banco.png)
+
+## 🔄 Fluxograma do Sistema
+![Fluxo Principal](./docs/architecture/fluxograma-sistema.png)
