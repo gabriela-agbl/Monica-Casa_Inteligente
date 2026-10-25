@@ -7,6 +7,6 @@ Imagine chegar em casa e ela já saber o que você precisa. Mônica é o painel 
 ![DER do Mônica](./docs/database/modelagem.png)
 
 ## 🔄 Fluxograma do Sistema
-![Fluxo Principal](./docs/architecture/fluxograma-sistema.png)
+![Fluxo Principal](./docs/architecture/fluxograma.png)
 
 📄 Para conferir a especificação completa de requisitos e arquitetura do projeto, acesse a [Documentação do Sistema](./docs/DOCUMENTACAO.md).
