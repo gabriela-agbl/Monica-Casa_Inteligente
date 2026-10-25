@@ -69,8 +69,41 @@ O projeto **Mônica** foi concebido para ser o painel central de uma casa inteli
 
 ---
 
-## 5. Próximas Etapas da Documentação
+##  Modelagem de Dados (DER / ERD)
 
-- [ ] **Modelagem de Dados (DER / ERD):** Mapeamento de tabelas, atributos e relacionamentos.
+Entidades e Atributos
+usuarios: Representa os utilizadores da plataforma e os seus privilégios de acesso.
+id (BIGSERIAL, Chave Primária)
+nome (VARCHAR(100), Não Nulo)
+email (VARCHAR(100), Único, Não Nulo)
+senha (VARCHAR(255), Hash BCrypt criptografado, Não Nulo)
+telefone (VARCHAR(20), Único, Não Nulo — Usado no disparo via Evolution API/WhatsApp)
+perfil (VARCHAR(20), Não Nulo — ADMIN ou COMUM para restrições de UX/UI)
+criado_em (TIMESTAMP, Padrão CURRENT_TIMESTAMP)
+dispositivos: Equipamentos inteligentes cadastrados na residência (iluminação, irrigação, HVAC/climatização, etc.).
+id (BIGSERIAL, Chave Primária)
+nome (VARCHAR(100), Não Nulo — Ex: "Luz da Sala", "Rega do Jardim")
+tipo (VARCHAR(50), Não Nulo — ILUMINACAO, CLIMATIZACAO, IRRIGACAO, SEGURANCA)
+status (BOOLEAN, Padrão FALSE — true para Ligado, false para Desligado)
+comodo (VARCHAR(50) — Ex: "Jardim", "Cozinha")
+usuario_id (BIGINT, Chave Estrangeira usuarios(id))
+rotinas: Regras e agendamentos automáticos executados pelo backend (@Scheduled).
+id (BIGSERIAL, Chave Primária)
+nome (VARCHAR(100), Não Nulo — Ex: "Rega Matinal", "Climatização Noite")
+horario (TIME, Não Nulo)
+dias_semana (VARCHAR(50), Não Nulo — Ex: "SEG,TER,QUA,QUI,SEX")
+acao (VARCHAR(20), Não Nulo — LIGAR ou DESLIGAR)
+ativo (BOOLEAN, Padrão TRUE)
+dispositivo_id (BIGINT, Chave Estrangeira dispositivos(id))
+alertas: Registos visuais no painel central e histórico de notificações enviadas via WhatsApp.
+id (BIGSERIAL, Chave Primária)
+titulo (VARCHAR(100), Não Nulo)
+mensagem (TEXT, Não Nulo)
+nivel (VARCHAR(20), Não Nulo — INFO, ALERTA, CRITICO)
+enviado_whatsapp (BOOLEAN, Padrão FALSE)
+criado_em (TIMESTAMP, Padrão CURRENT_TIMESTAMP)
+usuario_id (BIGINT, Chave Estrangeira usuarios(id))
+
+## 5. Próximas Etapas da Documentação
 - [ ] **Fluxograma do Sistema:** Mapeamento completo do fluxo de navegação e requisições HTTP da aplicação.
 - [ ] **Protótipo Figma:** Links e previews das telas finalizadas.
