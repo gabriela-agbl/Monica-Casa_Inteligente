@@ -4,7 +4,7 @@ Imagine chegar em casa e ela já saber o que você precisa. Mônica é o painel 
 ## "Just Monika." 💚
 
 ## 📊 Modelagem do Banco de Dados
-![DER do Mônica](./docs/database/modelagem-banco.png)
+![DER do Mônica](./docs/database/modelagem.png)
 
 ## 🔄 Fluxograma do Sistema
 ![Fluxo Principal](./docs/architecture/fluxograma-sistema.png)
