@@ -108,6 +108,12 @@ O projeto **Mônica** foi concebido para ser o painel central de uma casa inteli
    * `criado_em` (TIMESTAMP, Padrão `CURRENT_TIMESTAMP`)
    * `usuario_id` (BIGINT, Chave Estrangeira `usuarios(id)`)
 
+5. **`configuracoes`**: Guarda as preferências do sistema, dados da casa e chaves de integração (ex: Evolution API).
+   * `id` (BIGSERIAL, Chave Primária)
+   * `chave` (VARCHAR(100), Único, Não Nulo — *Ex: "WHATSAPP_API_TOKEN", "NOME_CASA"*)
+   * `valor` (TEXT, Não Nulo — *Ex: "token_12345", "Casa Mônica 2050"*)
+   * `usuario_id` (BIGINT, Chave Estrangeira `usuarios(id)` — *Opcional, caso a configuração seja por utilizador*)
+
 ## 6. Próximas Etapas da Documentação
 - [ ] **Fluxograma do Sistema:** Mapeamento completo do fluxo de navegação e requisições HTTP da aplicação.
 - [ ] **Protótipo Figma:** Links e previews das telas finalizadas.
