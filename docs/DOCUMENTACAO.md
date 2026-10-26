@@ -115,5 +115,4 @@ O projeto **Mônica** foi concebido para ser o painel central de uma casa inteli
    * `usuario_id` (BIGINT, Chave Estrangeira `usuarios(id)` — *Opcional, caso a configuração seja por utilizador*)
 
 ## 6. Próximas Etapas da Documentação
-- [ ] **Fluxograma do Sistema:** Mapeamento completo do fluxo de navegação e requisições HTTP da aplicação.
 - [ ] **Protótipo Figma:** Links e previews das telas finalizadas.
