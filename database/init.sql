@@ -1,0 +1,56 @@
+
+
+CREATE TABLE IF NOT EXISTS usuarios (
+    id BIGSERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    telefone VARCHAR(20) UNIQUE NOT NULL,
+    perfil VARCHAR(20) NOT NULL CHECK (perfil IN ('ADMIN', 'COMUM')),
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 2. Criar tabela de Dispositivos
+CREATE TABLE IF NOT EXISTS dispositivos (
+    id BIGSERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    tipo VARCHAR(50) NOT NULL CHECK (tipo IN ('ILUMINACAO', 'CLIMATIZACAO', 'IRRIGACAO', 'SEGURANCA', 'OUTRO')),
+    status BOOLEAN DEFAULT FALSE,
+    comodo VARCHAR(50),
+    usuario_id BIGINT NOT NULL,
+    CONSTRAINT fk_usuario_dispositivo FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+-- 3. Criar tabela de Rotinas Agendadas
+CREATE TABLE IF NOT EXISTS rotinas (
+    id BIGSERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    horario TIME NOT NULL,
+    dias_semana VARCHAR(50) NOT NULL,
+    acao VARCHAR(20) NOT NULL CHECK (acao IN ('LIGAR', 'DESLIGAR')),
+    ativo BOOLEAN DEFAULT TRUE,
+    dispositivo_id BIGINT NOT NULL,
+    CONSTRAINT fk_dispositivo_rotina FOREIGN KEY (dispositivo_id) REFERENCES dispositivos(id) ON DELETE CASCADE
+);
+
+-- 4. Criar tabela de Alertas e Notificacoes
+CREATE TABLE IF NOT EXISTS alertas (
+    id BIGSERIAL PRIMARY KEY,
+    titulo VARCHAR(100) NOT NULL,
+    mensagem TEXT NOT NULL,
+    nivel VARCHAR(20) NOT NULL CHECK (nivel IN ('INFO', 'ALERTA', 'CRITICO')),
+    enviado_whatsapp BOOLEAN DEFAULT FALSE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    usuario_id BIGINT NOT NULL,
+    CONSTRAINT fk_usuario_alerta FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+-- 5. Criar tabela de Configuracoes
+CREATE TABLE IF NOT EXISTS configuracoes (
+    id BIGSERIAL PRIMARY KEY,
+    chave VARCHAR(100) UNIQUE NOT NULL,
+    valor TEXT NOT NULL,
+    descricao VARCHAR(255),
+    usuario_id BIGINT,
+    CONSTRAINT fk_usuario_configuracao FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
