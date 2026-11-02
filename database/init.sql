@@ -1,5 +1,4 @@
-
-
+-- 1. Criar tabela de Usuarios
 CREATE TABLE IF NOT EXISTS usuarios (
     id BIGSERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
