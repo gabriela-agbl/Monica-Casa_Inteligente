@@ -28,15 +28,18 @@ services:
       - AUTHENTICATION_TYPE=apikey
       - AUTHENTICATION_API_KEY=monica_secret_key_2050
       - DATABASE_PROVIDER=postgresql
-      - DATABASE_CONNECTION_URI=postgresql://postgres:postgrespassword@postgres:5432/monica_db
+      - DATABASE_CONNECTION_URI=postgresql://postgres:postgrespassword@postgres:5432/evolution_db
       - DATABASE_SAVE_DATA_INSTANCE=true
       - DATABASE_SAVE_DATA_MESSAGE=true
       - DATABASE_SAVE_DATA_CHATS=true
       - DATABASE_SAVE_DATA_CONTACTS=true
+      - CACHE_REDIS_ENABLED=false
+      - DEL_INSTANCE=false
     volumes:
       - evolution_instances:/evolution/instances
     depends_on:
-      - postgres
+      postgres: 
+        condition: service_started
 
 volumes:
   postgres_data:
