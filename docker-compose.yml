@@ -13,7 +13,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       # Executa o script init.sql automaticamente ao criar o container
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   # Instância da Evolution API para gestão do WhatsApp
   evolution_api:
