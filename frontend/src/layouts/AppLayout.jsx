@@ -1,0 +1,11 @@
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { Activity, Bell, CalendarClock, ChevronRight, House, LayoutDashboard, LogOut, Settings, Shield, Smartphone, Users, Wifi } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+const links = [
+  { to:'/', label:'Painel', icon:LayoutDashboard }, { to:'/dispositivos', label:'Dispositivos', icon:Smartphone },
+  { to:'/rotinas', label:'Rotinas', icon:CalendarClock, admin:true }, { to:'/alertas', label:'Alertas', icon:Bell, admin:true },
+  { to:'/historico', label:'Histórico', icon:Activity, admin:true }, { to:'/usuarios', label:'Moradores', icon:Users, admin:true }, { to:'/configuracoes', label:'Configurações', icon:Settings, admin:true }
+];
+export default function AppLayout(){ const {user,isAdmin,logout}=useAuth(); const location=useLocation(); const title=links.find(l=>l.to===location.pathname)?.label||'Mônica';
+ return <div className="app-shell"><aside className="sidebar"><div className="brand"><div className="brand-mark"><House size={22}/></div><div><strong>Mônica</strong><small>CASA INTELIGENTE</small></div></div><div className="home-chip"><span className="online-dot"/> Casa conectada <Wifi size={15}/></div><div className="nav-label">MENU PRINCIPAL</div><nav>{links.filter(l=>!l.admin||isAdmin).map(({to,label,icon:Icon})=><NavLink key={to} to={to} end={to==='/'} className={({isActive})=>`nav-link ${isActive?'active':''}`}><Icon size={18}/><span>{label}</span>{location.pathname===to&&<ChevronRight size={15}/>}</NavLink>)}</nav><div className="sidebar-bottom"><div className="profile-mini"><div className="avatar">{user?.nome?.[0]?.toUpperCase()||'M'}</div><div className="profile-info"><strong>{user?.nome}</strong><small>{isAdmin?'Administrador':'Convidado'}</small></div><button className="icon-button logout" onClick={logout} title="Sair"><LogOut size={17}/></button></div><div className="sidebar-foot">Mônica © 2050 · v1.0</div></div></aside><main className="main-area"><header className="topbar"><div><span>Casa / </span><strong>{title}</strong></div><div className="topbar-right"><span className="live-pill"><i/> Sistema operacional</span><div className="avatar avatar-small">{user?.nome?.[0]?.toUpperCase()||'M'}</div></div></header><div className="page-content"><Outlet/></div></main></div>
+}
