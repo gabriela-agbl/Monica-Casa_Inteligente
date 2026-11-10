@@ -1,17 +1,6 @@
 package com.monica.casa.model;
 
 import jakarta.persistence.*;
-<<<<<<< HEAD
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Entity
-@Table(name = "usuarios")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-=======
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,29 +12,12 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
->>>>>>> 8adff7e (Implementa backend Spring Boot da Monica Casa Inteligente)
 public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-<<<<<<< HEAD
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(nullable = false)
-    private String senha;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Perfil perfil; // ADMIN ou COMUM
-}
-
-enum Perfil {
-    ADMIN, COMUM
-}
-=======
     @Column(nullable = false, length = 100)
     private String nome;
 
@@ -74,4 +46,3 @@ enum Perfil {
         }
     }
 }
->>>>>>> 8adff7e (Implementa backend Spring Boot da Monica Casa Inteligente)

@@ -1,19 +1,5 @@
 package com.monica.casa.security;
 
-<<<<<<< HEAD
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-
-@Configuration
-@EnableWebSecurity
-=======
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,22 +26,11 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity // habilita @PreAuthorize nos controllers
->>>>>>> 8adff7e (Implementa backend Spring Boot da Monica Casa Inteligente)
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-<<<<<<< HEAD
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/h2-console/**").permitAll() // Se usar H2 em testes
-                .requestMatchers("/api/admin/**").hasRole("ADMIN") // Restrito a Admin
-                .requestMatchers("/api/dispositivos/**").hasAnyRole("ADMIN", "COMUM") // Admin e Comum
-                .anyRequest().authenticated()
-            )
-            .httpBasic(httpBasic -> {}); // Ou configuração de JWT posteriormente
-=======
             .cors(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable())
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -71,13 +46,10 @@ public class SecurityConfig {
             // O entry point customizado devolve 401 JSON sem o header WWW-Authenticate,
             // evitando o pop-up nativo de login do navegador no front-end React.
             .httpBasic(basic -> basic.authenticationEntryPoint(entryPointJson()));
->>>>>>> 8adff7e (Implementa backend Spring Boot da Monica Casa Inteligente)
 
         return http.build();
     }
 
-<<<<<<< HEAD
-=======
     private AuthenticationEntryPoint entryPointJson() {
         return (request, response, ex) -> {
             response.setStatus(401);
@@ -102,7 +74,6 @@ public class SecurityConfig {
         return source;
     }
 
->>>>>>> 8adff7e (Implementa backend Spring Boot da Monica Casa Inteligente)
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -112,8 +83,4 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 8adff7e (Implementa backend Spring Boot da Monica Casa Inteligente)

@@ -51,9 +51,11 @@ O projeto **Mônica** foi concebido para ser o painel central de uma casa inteli
 - **Organização em camadas (`com.monica.casa`):** `model`, `repository`, `service`, `controller`, `dto`, `exception`, `config`, `security`, `scheduler` e `util`.
 
 ### Front-End
-- **Biblioteca/Framework:** React (ou Vue.js)
-- **Estilização:** Tailwind CSS
-- **Consumo:** Cliente HTTP (Axios/Fetch) consumindo a API REST.
+- **Biblioteca/Framework:** React 18 com Vite.
+- **Navegação:** React Router.
+- **Estilização:** Tailwind CSS e CSS próprio baseado no Design System Mônica.
+- **Ícones:** Lucide React.
+- **Consumo:** Axios consumindo a API REST Spring Boot.
 
 ### Banco de Dados & Infraestrutura
 - **Banco de Dados:** PostgreSQL (Banco relacional), criado pelo script `database/init.sql`.

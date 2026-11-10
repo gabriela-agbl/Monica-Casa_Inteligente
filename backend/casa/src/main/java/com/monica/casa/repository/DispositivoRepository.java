@@ -14,5 +14,9 @@ public interface DispositivoRepository extends JpaRepository<Dispositivo, Long> 
 
     long countByStatusTrue();
 
+    long countByAcessoConvidadoTrue();
+
+    long countByAcessoConvidadoTrueAndStatusTrue();
+
     boolean existsByUsuarioId(Long usuarioId);
 }

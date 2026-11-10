@@ -1,14 +1,5 @@
 package com.monica.casa.repository;
 
-<<<<<<< HEAD
-import com.monica.casa.model.Usuario;
-import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.Optional;
-
-public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-    Optional<Usuario> findByEmail(String email);
-}
-=======
 import com.monica.casa.model.Perfil;
 import com.monica.casa.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -34,4 +25,3 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     List<Usuario> findAllByOrderByNomeAsc();
 }
->>>>>>> 8adff7e (Implementa backend Spring Boot da Monica Casa Inteligente)

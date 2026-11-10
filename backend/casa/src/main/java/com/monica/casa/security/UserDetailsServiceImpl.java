@@ -20,11 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-<<<<<<< HEAD
-        Usuario usuario = usuarioRepository.findByEmail(email)
-=======
         Usuario usuario = usuarioRepository.findByEmail(email.trim().toLowerCase())
->>>>>>> 8adff7e (Implementa backend Spring Boot da Monica Casa Inteligente)
                 .orElseThrow(() -> new UsernameNotFoundException("Utilizador não encontrado: " + email));
 
         // Mapeia o perfil (ADMIN ou COMUM) para as Authorities do Spring Security

@@ -1,49 +1,23 @@
 package com.monica.casa.model;
 
 import jakarta.persistence.*;
-<<<<<<< HEAD
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-=======
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
->>>>>>> 8adff7e (Implementa backend Spring Boot da Monica Casa Inteligente)
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "alertas")
-<<<<<<< HEAD
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-=======
 @Getter
 @Setter
 @NoArgsConstructor
->>>>>>> 8adff7e (Implementa backend Spring Boot da Monica Casa Inteligente)
 public class Alerta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-<<<<<<< HEAD
-    @Column(nullable = false)
-    private String titulo;
-
-    @Column(nullable = false, length = 500)
-    private String mensagem;
-
-    @Column(nullable = false)
-    private LocalDateTime dataHora = LocalDateTime.now();
-
-    @Column(nullable = false)
-    private Boolean lido = false;
-}
-=======
     @Column(nullable = false, length = 100)
     private String titulo;
 
@@ -72,4 +46,3 @@ public class Alerta {
         }
     }
 }
->>>>>>> 8adff7e (Implementa backend Spring Boot da Monica Casa Inteligente)

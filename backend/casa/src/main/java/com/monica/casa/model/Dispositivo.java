@@ -1,17 +1,6 @@
 package com.monica.casa.model;
 
 import jakarta.persistence.*;
-<<<<<<< HEAD
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Entity
-@Table(name = "dispositivos")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-=======
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,26 +10,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
->>>>>>> 8adff7e (Implementa backend Spring Boot da Monica Casa Inteligente)
 public class Dispositivo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-<<<<<<< HEAD
-    @Column(nullable = false)
-    private String nome;
-
-    @Column(nullable = false)
-    private String tipo; // Ex: LÂMPADA, SENSOR, CÂMERA, AR_CONDICIONADO
-
-    @Column(nullable = false)
-    private Boolean status; // true para ligado, false para desligado
-
-    private String comodo; // Ex: Sala, Cozinha, Quarto
-}
-=======
     @Column(nullable = false, length = 100)
     private String nome;
 
@@ -64,4 +39,3 @@ public class Dispositivo {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 }
->>>>>>> 8adff7e (Implementa backend Spring Boot da Monica Casa Inteligente)

@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS dispositivos (
     tipo VARCHAR(50) NOT NULL CHECK (tipo IN ('ILUMINACAO', 'CLIMATIZACAO', 'IRRIGACAO', 'SEGURANCA', 'OUTRO')),
     status BOOLEAN DEFAULT FALSE,
     comodo VARCHAR(50),
+    acesso_convidado BOOLEAN NOT NULL DEFAULT FALSE,
     usuario_id BIGINT NOT NULL,
     CONSTRAINT fk_usuario_dispositivo FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
@@ -67,3 +68,6 @@ CREATE TABLE IF NOT EXISTS historico_dispositivos (
     criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_dispositivo_historico FOREIGN KEY (dispositivo_id) REFERENCES dispositivos(id) ON DELETE CASCADE
 );
+
+-- Compatibilidade com bancos criados por versões anteriores do projeto.
+ALTER TABLE dispositivos ADD COLUMN IF NOT EXISTS acesso_convidado BOOLEAN NOT NULL DEFAULT FALSE;

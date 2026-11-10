@@ -22,7 +22,14 @@ public class DashboardService {
     private final UsuarioRepository usuarioRepository;
 
     @Transactional(readOnly = true)
-    public DashboardDTO.Resumo resumo() {
+    public DashboardDTO.Resumo resumo(boolean admin) {
+        if (!admin) {
+            // Convidados só recebem números dos dispositivos explicitamente liberados.
+            return new DashboardDTO.Resumo(
+                    dispositivoRepository.countByAcessoConvidadoTrue(),
+                    dispositivoRepository.countByAcessoConvidadoTrueAndStatusTrue(),
+                    0, 0, 0);
+        }
         return new DashboardDTO.Resumo(
                 dispositivoRepository.count(),
                 dispositivoRepository.countByStatusTrue(),
