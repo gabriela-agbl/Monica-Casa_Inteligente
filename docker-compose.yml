@@ -15,32 +15,22 @@ services:
       # Executa o script init.sql automaticamente ao criar o container
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  # Instância da Evolution API para gestão do WhatsApp
-  evolution_api:
-    image: evoapicloud/evolution-api:latest
-    container_name: monica_evolution_api
-    restart: always
+  # WhatsApp - WAHA
+  waha:
+    image: devlikeapro/waha
+    container_name: monica_waha
+    restart: unless-stopped
     ports:
-      - "8081:8080"
+      - "127.0.0.1:3000:3000"
     environment:
-      - SERVER_URL=http://localhost:8081
-      - DOCKER_ENV=true
-      - AUTHENTICATION_TYPE=apikey
-      - AUTHENTICATION_API_KEY=monica_secret_key_2050
-      - DATABASE_PROVIDER=postgresql
-      - DATABASE_CONNECTION_URI=postgresql://postgres:postgrespassword@postgres:5432/evolution_db
-      - DATABASE_SAVE_DATA_INSTANCE=true
-      - DATABASE_SAVE_DATA_MESSAGE=true
-      - DATABASE_SAVE_DATA_CHATS=true
-      - DATABASE_SAVE_DATA_CONTACTS=true
-      - CACHE_REDIS_ENABLED=false
-      - DEL_INSTANCE=false
+      WAHA_API_KEY: ${WAHA_API_KEY}
+      WAHA_DASHBOARD_USERNAME: ${WAHA_DASHBOARD_USERNAME}
+      WAHA_DASHBOARD_PASSWORD: ${WAHA_DASHBOARD_PASSWORD}
+      WAHA_PRINT_QR: "False"
+      WHATSAPP_DEFAULT_ENGINE: WEBJS
     volumes:
-      - evolution_instances:/evolution/instances
-    depends_on:
-      postgres: 
-        condition: service_started
+      - waha_sessions:/app/.sessions
 
 volumes:
   postgres_data:
-  evolution_instances:
+  waha_sessions:
