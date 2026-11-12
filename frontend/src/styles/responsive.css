@@ -1,0 +1,50 @@
+/* Hover: ações de linha só aparecem ao passar o mouse (em telas touch ficam sempre visíveis). */
+@media (hover: hover) {
+  .row-actions, .device-card__actions { opacity: 0; transition: opacity 0.15s; }
+  .routine-row:hover .row-actions, .row-actions:focus-within,
+  .device-card:hover .device-card__actions, .device-card__actions:focus-within { opacity: 1; }
+}
+
+@media (max-width: 1180px) {
+  .window { grid-template-columns: 180px minmax(0, 1fr); }
+  .main { padding: 22px 20px 28px; }
+  .device-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .stat-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 960px) {
+  .canvas { padding: 12px; }
+  .window { display: block; min-height: 0; border-radius: 24px; }
+  .sidebar { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding: 16px 18px; }
+  .sidebar__nav { flex-direction: row; order: 3; width: 100%; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+  .nav-link { width: auto; flex: none; padding: 7px 14px; font-size: 15px; }
+  .sidebar__bottom { flex-direction: row; align-items: center; margin: 0 0 0 auto; }
+  .nav-link--plain { width: auto; }
+
+  .home__grid, .routines__grid, .alerts__grid, .settings__grid, .devices__bottom { grid-template-columns: minmax(0, 1fr); }
+  .device-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  .auth-window { grid-template-columns: minmax(0, 1fr); padding: 16px; gap: 18px; }
+  .auth-window--image-left .auth-visual { order: 2; }
+  .auth-visual { min-height: 300px; }
+  .portrait--hero { min-height: 300px; }
+  .speech-bubble, .auth-window--image-left .speech-bubble { right: 12px; left: auto; top: auto; bottom: 16px; }
+}
+
+@media (max-width: 640px) {
+  .main { padding: 18px 14px 24px; }
+  .page-head { flex-wrap: wrap; }
+  .page-head h1, .home__greeting h1 { font-size: 32px; }
+  .home__top { grid-template-columns: minmax(0, 1fr); }
+  .home__aside { grid-column: 1; grid-row: auto; width: 190px; height: 112px; margin: 10px 8px 0 auto; order: -1; }
+  .home__top .stat-row { grid-row: auto; }
+  .page-head--portrait { flex-direction: column; }
+  .page-head--portrait .page-head__aside { align-self: flex-end; margin: 6px 8px 22px 0; }
+  .count-row { grid-template-columns: 1fr; }
+  .device-cards, .device-tiles, .quick-grid, .energy__tiles, .form-row, .auth-form__pair { grid-template-columns: minmax(0, 1fr); }
+  .assistant, .assistant-config__body, .recommend__body { flex-direction: column; align-items: stretch; text-align: center; }
+  .assistant .portrait, .recommend__body .portrait, .assistant-config__body .portrait { align-self: center; }
+  .routine-row { flex-wrap: wrap; }
+  .toast-stack { right: 12px; left: 12px; bottom: 12px; }
+  .auth-card { padding: 24px 18px; }
+}

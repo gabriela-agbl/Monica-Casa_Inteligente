@@ -17,7 +17,7 @@ export function AuthProvider({ children }) {
     if (localStorage.getItem('monica.auth')) api.get('/auth/me').then(({ data }) => setUser(data)).catch(logout).finally(() => setLoading(false)); else setLoading(false);
     return () => window.removeEventListener('monica:unauthorized', onUnauthorized);
   }, []);
-  const value = useMemo(() => ({ user, loading, login, logout, register, isAdmin: user?.perfil === 'ADMIN' }), [user, loading]);
+  const value = useMemo(() => ({ user, setUser, loading, login, logout, register, isAdmin: user?.perfil === 'ADMIN' }), [user, loading]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 export const useAuth = () => useContext(AuthContext);

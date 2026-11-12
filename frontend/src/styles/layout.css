@@ -1,0 +1,118 @@
+/* ───────── Fundo, janela, sidebar ───────── */
+.canvas {
+  min-height: 100vh;
+  padding: 24px;
+  background: linear-gradient(96deg, #13171c 0%, #14181d 46%, #173033 80%, #1e4246 100%);
+}
+
+.window {
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr);
+  max-width: 1360px;
+  min-height: calc(100vh - 48px);
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 30px;
+  background: linear-gradient(180deg, #0e131a, #0a0e13);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+}
+
+.main { min-width: 0; padding: 26px 30px 32px; }
+
+/* Sidebar */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  padding: 26px 16px 20px;
+  background: linear-gradient(180deg, rgba(0, 127, 35, 0.3), rgba(0, 127, 35, 0.12) 55%, rgba(0, 127, 35, 0.2));
+}
+
+.brand { display: flex; align-items: center; gap: 8px; font-size: 32px; line-height: 1; color: #fff; }
+.sidebar__brand { padding-left: 4px; }
+.sidebar__brand .house-mark { width: 46px; height: 46px; }
+.sidebar__nav { display: flex; flex-direction: column; gap: 10px; }
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 16px;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  font-size: 17px;
+  color: #fff;
+  text-align: left;
+  transition: border-color 0.18s, color 0.18s, background 0.18s;
+}
+.nav-link svg { flex: none; color: var(--teal); }
+.nav-link:hover { background: rgba(255, 255, 255, 0.05); }
+.nav-link.is-active {
+  border-color: var(--green);
+  color: var(--green);
+  box-shadow: 0 0 16px rgba(34, 197, 94, 0.22), inset 0 0 14px rgba(34, 197, 94, 0.08);
+}
+.nav-link.is-active svg { color: var(--green); }
+
+.sidebar__bottom { margin-top: auto; display: flex; flex-direction: column; gap: 10px; }
+.profile-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 17px;
+}
+.profile-link:hover { background: rgba(255, 255, 255, 0.05); }
+.profile-link > svg:last-child { margin-left: auto; color: var(--dim); }
+
+.avatar {
+  position: relative;
+  display: grid;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1fc24f, #0a7a2f);
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  font-size: 14px;
+}
+.avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.avatar b { font-weight: 400; color: #fff; }
+.avatar--lg { width: 66px; height: 66px; font-size: 26px; }
+
+/* ───────── Cabeçalho das páginas ───────── */
+.page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-bottom: 22px; }
+.page-head h1 { font-size: 40px; line-height: 1.1; color: var(--red); }
+.page-head p { margin-top: 6px; font-size: 17px; color: var(--red); }
+.page-head__aside { position: relative; display: flex; flex-direction: column; align-items: flex-end; gap: 30px; flex: none; }
+
+.page-head--portrait .page-head__aside { display: block; width: 210px; height: 120px; }
+.page-head--portrait .portrait { position: absolute; inset: 0; }
+.page-head--portrait .clock-chip { position: absolute; top: -8px; right: -10px; z-index: 2; }
+
+.clock-chip {
+  min-width: 120px;
+  padding: 7px 18px;
+  border: 1.5px solid rgba(225, 235, 238, 0.85);
+  border-radius: 24px;
+  background: rgba(8, 12, 17, 0.88);
+  text-align: center;
+  line-height: 1.15;
+}
+.clock-chip strong { display: block; font-size: 21px; font-weight: 400; }
+.clock-chip span { font-size: 13px; color: var(--dim); }
+
+.link-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 14px;
+  color: var(--text);
+}
+.link-more:hover { color: var(--green); }
+.link-more--back { margin-top: 4px; }
