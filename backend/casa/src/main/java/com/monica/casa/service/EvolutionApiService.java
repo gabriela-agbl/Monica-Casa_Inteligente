@@ -11,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Map;
 
@@ -28,10 +30,13 @@ public class EvolutionApiService {
 
     private final EvolutionProperties props;
     private final RestClient client;
+    private final ObjectMapper objectMapper;
 
-    public EvolutionApiService(EvolutionProperties props, @Qualifier("evolutionRestClient") RestClient client) {
+    public EvolutionApiService(EvolutionProperties props,@Qualifier("evolutionRestClient") RestClient client,ObjectMapper objectMapper) 
+    {
         this.props = props;
         this.client = client;
+        this.objectMapper = objectMapper;
     }
 
     /**
@@ -80,8 +85,9 @@ public class EvolutionApiService {
     /** POST /instance/create: cria a instância do WhatsApp (uma única vez). */
     public Map<String, Object> criarInstancia() {
         exigirHabilitada();
+
         try {
-            return client.post()
+            String resposta = client.post()
                     .uri("/instance/create")
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(Map.of(
@@ -89,9 +95,23 @@ public class EvolutionApiService {
                             "qrcode", true,
                             "integration", "WHATSAPP-BAILEYS"))
                     .retrieve()
-                    .body(MAPA);
+                    .body(String.class);
+
+            log.info("Resposta da criação da instância: {}", resposta);
+
+            return objectMapper.readValue(
+                    resposta,
+                    new TypeReference<Map<String, Object>>() {}
+            );
+
         } catch (RestClientException e) {
-            throw new IntegracaoExternaException("Não foi possível criar a instância na Evolution API: " + e.getMessage(), e);
+            throw new IntegracaoExternaException(
+                    "Não foi possível criar a instância na Evolution API: " + e.getMessage(), e
+            );
+        } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
+            throw new IntegracaoExternaException(
+                    "A Evolution API retornou uma resposta que não pôde ser interpretada: " + e.getMessage(), e
+            );
         }
     }
 
