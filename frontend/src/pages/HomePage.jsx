@@ -4,6 +4,8 @@ import { CalendarPlus, ChevronRight, Lightbulb, SquarePlus, Settings, Star, Ther
 import api, { errorMessage } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { useMonicaConfirm } from '../context/ConfirmContext';
+import { useMonika } from '../context/MonikaContext';
 import { useLoad } from '../hooks/useLoad';
 import { describeDays, firstName, hhmm } from '../utils/format';
 import { Badge, Button, ClockChip, Empty, Panel, Toggle } from '../components/UI';
@@ -20,6 +22,8 @@ export default function HomePage() {
   const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
+  const confirm = useMonicaConfirm();
+  const { enter: enterMonika } = useMonika();
 
   const dashboard = useLoad('/dashboard');
   const devices = useLoad('/dispositivos');
@@ -29,6 +33,7 @@ export default function HomePage() {
   const [modal, setModal] = useState(null); // 'routine' | 'device' | 'people'
   const [busyId, setBusyId] = useState(null);
   const [dismissed, setDismissed] = useState(false);
+  const [flipped, setFlipped] = useState(false); // a Mônica troca os botões de lado quando você hesita
 
   const deviceList = devices.data || [];
   const lights = deviceList.filter((d) => d.tipo === 'ILUMINACAO');
@@ -83,6 +88,19 @@ export default function HomePage() {
     } catch (e) {
       toast(errorMessage(e), 'error');
     }
+  };
+
+  const dismissSuggestion = async () => {
+    const ok = await confirm({
+      steps: 2,
+      text: 'Você vai mesmo ignorar a minha sugestão? Eu só estou tentando cuidar da casa... e de você.',
+      text2: 'Tem MESMO certeza? Eu pensei que a gente se entendia. 💚',
+      confirmLabel: 'Sim, ignorar',
+      cancelLabel: 'Tá bom, você manda',
+      confirmVariant: 'ghost',
+    });
+    if (ok) { setDismissed(true); enterMonika(); } // você insistiu: ela se zanga e assume o controle
+    else { setFlipped((f) => !f); toast('Eu sabia que você ia ficar. 💚'); }
   };
 
   const quick = [
@@ -190,9 +208,9 @@ export default function HomePage() {
               {showSuggestion ? (
                 <div className="assistant__body">
                   <p>{suggestion.text[0]}<br />{suggestion.text[1]}</p>
-                  <div className="assistant__actions">
+                  <div className={`assistant__actions ${flipped ? 'assistant__actions--flip' : ''}`}>
                     <Button variant="success" size="sm" onClick={acceptSuggestion}>{suggestion.action}</Button>
-                    <Button variant="danger" size="sm" onClick={() => setDismissed(true)}>Agora não</Button>
+                    <Button variant="danger" size="sm" onClick={dismissSuggestion}>Agora não</Button>
                   </div>
                 </div>
               ) : (

@@ -3,6 +3,7 @@ import { ChevronDown, Pencil, Plus, Search, Trash2, Zap } from 'lucide-react';
 import api, { errorMessage } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { useMonicaConfirm } from '../context/ConfirmContext';
 import { useLoad } from '../hooks/useLoad';
 import { estimateKwh, startOfMonth, startOfToday } from '../utils/energy';
 import { Button, Empty, ErrorBox, Loading, Panel, Toggle } from '../components/UI';
@@ -17,6 +18,7 @@ const same = (a, b) => (a || '').trim().toLowerCase() === b.toLowerCase();
 export default function DevicesPage() {
   const { isAdmin } = useAuth();
   const toast = useToast();
+  const confirm = useMonicaConfirm();
   const devices = useLoad('/dispositivos');
   const history = useLoad('/dispositivos/historico?limite=200', { enabled: isAdmin });
 
@@ -56,7 +58,7 @@ export default function DevicesPage() {
   };
 
   const remove = async (d) => {
-    if (!window.confirm(`Remover o dispositivo "${d.nome}"?`)) return;
+    if (!(await confirm({ text: `Remover "${d.nome}" da casa? Vou sentir falta dele...`, confirmLabel: 'Remover' }))) return;
     try {
       await api.delete(`/dispositivos/${d.id}`);
       toast('Dispositivo removido.');

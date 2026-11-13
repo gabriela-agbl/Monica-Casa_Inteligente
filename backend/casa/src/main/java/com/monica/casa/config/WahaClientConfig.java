@@ -9,10 +9,10 @@ import org.springframework.web.client.RestClient;
 import java.time.Duration;
 
 @Configuration
-public class EvolutionClientConfig {
+public class WahaClientConfig {
 
     @Bean
-    public RestClient evolutionRestClient(EvolutionProperties props) {
+    public RestClient wahaRestClient(WahaProperties props) {
         SimpleClientHttpRequestFactory factory =
                 new SimpleClientHttpRequestFactory();
 

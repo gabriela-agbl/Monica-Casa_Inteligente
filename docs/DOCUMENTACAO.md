@@ -30,7 +30,7 @@ O projeto **Mônica** foi concebido para ser o painel central de uma casa inteli
 
 ### 💬 Notificações e Central de Alertas
 - Alertas registrados no painel (níveis `INFO`, `ALERTA` e `CRITICO`).
-- Envio das notificações via WhatsApp para os administradores (Evolution API) ao executar rotinas e ao desligar dispositivos de segurança.
+- Envio das notificações via WhatsApp para os administradores (WAHA) ao executar rotinas e ao desligar dispositivos de segurança.
 - O envio pelo WhatsApp pode ser ligado/desligado nas configurações da central.
 
 ### 📊 Painel Central
@@ -59,8 +59,8 @@ O projeto **Mônica** foi concebido para ser o painel central de uma casa inteli
 
 ### Banco de Dados & Infraestrutura
 - **Banco de Dados:** PostgreSQL (Banco relacional), criado pelo script `database/init.sql`.
-- **Containerização:** Docker & Docker Compose (PostgreSQL + Evolution API).
-- **Integração Externa:** Evolution API (envio de mensagens via WhatsApp rodando via Docker).
+- **Containerização:** Docker & Docker Compose (PostgreSQL + WAHA).
+- **Integração Externa:** WAHA — WhatsApp HTTP API (`devlikeapro/waha`, engine WEBJS), em Docker. Gera o QR Code de pareamento e envia mensagens por `POST /api/sendText`. Substituiu a Evolution API, cujo QR Code deixou de ser gerado.
 
 ---
 
@@ -100,7 +100,7 @@ O projeto **Mônica** foi concebido para ser o painel central de uma casa inteli
    * `nome` (VARCHAR(100), Não Nulo)
    * `email` (VARCHAR(100), Único, Não Nulo)
    * `senha` (VARCHAR(255), Hash BCrypt criptografado, Não Nulo)
-   * `telefone` (VARCHAR(20), Único, Não Nulo — *Usado no disparo via Evolution API/WhatsApp; guardado só com dígitos e DDI, ex.: 5511999999999*)
+   * `telefone` (VARCHAR(20), Único, Não Nulo — *Usado no disparo via WAHA/WhatsApp; guardado só com dígitos e DDI, ex.: 5511999999999*)
    * `perfil` (VARCHAR(20), Não Nulo — *`ADMIN` ou `COMUM`*)
    * `criado_em` (TIMESTAMP, Padrão `CURRENT_TIMESTAMP`)
 
@@ -201,7 +201,7 @@ Autenticação: **HTTP Basic** (e-mail e senha). Erros seguem o formato `{status
 | GET | `/api/admin/configuracoes` | Admin | Lista configurações |
 | GET/PUT/DELETE | `/api/admin/configuracoes/{chave}` | Admin | Consulta / cria-atualiza / remove configuração |
 | GET | `/api/admin/whatsapp/status` | Admin | Estado da conexão do WhatsApp |
-| POST | `/api/admin/whatsapp/instancia` | Admin | Cria a instância na Evolution API |
+| POST | `/api/admin/whatsapp/instancia` | Admin | Garante a sessão `default` na WAHA (idempotente) |
 | GET | `/api/admin/whatsapp/qrcode` | Admin | QR Code para parear o WhatsApp |
 | POST | `/api/admin/whatsapp/teste` | Admin | Envia mensagem de teste ao admin logado |
 
@@ -209,15 +209,32 @@ Autenticação: **HTTP Basic** (e-mail e senha). Erros seguem o formato `{status
 
 ## 9. Configuração e Execução
 
-1. `docker compose up -d` — sobe o PostgreSQL (o `init.sql` cria o schema e o banco da Evolution API) e a Evolution API (porta 8081).
+1. `docker compose up -d` — sobe o PostgreSQL (o `init.sql` cria o schema) e a WAHA (porta 3000). Antes, copie `.env.example` para `.env` e defina `WAHA_API_KEY`.
    *Se o volume do banco já existia, recrie-o com `docker compose down -v` para aplicar o `init.sql` atualizado.*
 2. `cd backend/casa && ./mvnw spring-boot:run` — API em `http://localhost:8080`.
 3. Ajuste em `backend/casa/src/main/resources/application.properties`:
    - `monica.admin.*`: e-mail, senha e **telefone do administrador inicial** (o telefone recebe os alertas).
-   - `evolution.*`: URL, chave (`AUTHENTICATION_API_KEY` do `docker-compose.yml`) e nome da instância; `evolution.enabled=false` desliga o envio.
+   - `waha.*`: URL (`WAHA_URL`), chave (`WAHA_API_KEY`, lida do `.env` da raiz) e sessão (`default` na WAHA Core); `waha.enabled=false` desliga o envio.
    - `monica.cors.allowed-origins`: endereços do front-end.
    - `monica.timezone`: fuso usado pelo agendador (padrão `America/Sao_Paulo`).
 4. Testes automatizados: `./mvnw test` (usam banco em memória, sem Docker).
+
+---
+
+### 9.0 Personalidade da Mônica
+
+- **Alertas no WhatsApp:** cada mensagem termina com uma fala da Mônica sorteada pela gravidade (`AlertaService.FALAS`).
+- **"Tem certeza?":** `ConfirmContext` substitui o `window.confirm`. Ao ignorar uma sugestão ("Agora não") a Mônica pergunta duas vezes, a ordem dos botões é sorteada e inverte a cada etapa; se o usuário desiste, ela troca os botões de lado e comenta.
+- **Glitch nos erros:** toasts de erro mostram uma fala da Mônica com efeito glitch (`styles/monica.css`; respeita `prefers-reduced-motion`).
+
+### 9.1 Conectando o WhatsApp (WAHA)
+
+1. `docker compose up -d` e inicie o back-end.
+2. No painel: **Configurações → Segurança**. O status passa por *Iniciando → Aguardando QR Code → Conectado*.
+3. Com o QR na tela, no celular: WhatsApp → *Aparelhos conectados* → *Conectar um aparelho*.
+4. Clique em *Enviar teste*. O telefone do admin (`DDI+DDD+número`) recebe a mensagem.
+
+Mapeamento de estados (`WahaService.estadoConexao`): `WORKING → open`, `STARTING → connecting`, demais estados em minúsculas (`scan_qr_code`, `stopped`, `failed`).
 
 ---
 

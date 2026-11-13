@@ -4,14 +4,41 @@ import api, { errorMessage } from '../../services/api';
 import { useToast } from '../../context/ToastContext';
 import { Button, Modal } from '../UI';
 
-/** "Segurança": integração com o WhatsApp (Evolution API) e atalho para o histórico. */
+const STATE_LABEL = {
+  connecting: 'Iniciando...',
+  scan_qr_code: 'Aguardando QR Code',
+  stopped: 'Parada',
+  failed: 'Falhou',
+};
+
+/** "Segurança": integração com o WhatsApp (WAHA) e atalho para o histórico. */
 export default function SecurityModal({ onClose }) {
   const toast = useToast();
   const [wa, setWa] = useState(null);
   const [busy, setBusy] = useState('');
 
+  // Consulta o status a cada 3s; quando a sessão pede o QR (scan_qr_code), busca a imagem sozinho.
   useEffect(() => {
-    api.get('/admin/whatsapp/status').then((r) => setWa(r.data)).catch(() => setWa({ state: 'indisponível' }));
+    let alive = true;
+    const tick = async () => {
+      try {
+        const { data } = await api.get('/admin/whatsapp/status');
+        if (!alive) return;
+        if (data.state === 'scan_qr_code') {
+          try {
+            const qrRes = await api.get('/admin/whatsapp/qrcode');
+            if (alive) setWa({ ...data, base64: qrRes.data.base64 });
+            return;
+          } catch { /* mantém só o status */ }
+        }
+        setWa(data);
+      } catch {
+        if (alive) setWa({ state: 'indisponível' });
+      }
+    };
+    tick();
+    const id = setInterval(tick, 3000);
+    return () => { alive = false; clearInterval(id); };
   }, []);
 
   const run = async (key, fn, okMessage) => {
@@ -38,10 +65,10 @@ export default function SecurityModal({ onClose }) {
           <strong>Conexão com o WhatsApp</strong>
           <small>Alertas de segurança e rotinas chegam direto no seu celular.</small>
         </div>
-        <span className={`status-dot ${connected ? 'is-ok' : 'is-off'}`}>{connected ? 'Conectado' : state}</span>
+        <span className={`status-dot ${connected ? 'is-ok' : 'is-off'}`}>{connected ? 'Conectado' : STATE_LABEL[state] || state}</span>
       </div>
       <div className="security-actions">
-        <Button variant="ghost" size="sm" loading={busy === 'create'} onClick={() => run('create', async () => (await api.post('/admin/whatsapp/instancia')).data, 'Solicitação de criação enviada.')}>Criar instância</Button>
+        <Button variant="ghost" size="sm" loading={busy === 'create'} onClick={() => run('create', async () => (await api.post('/admin/whatsapp/instancia')).data, 'Sessão da WAHA garantida.')}>Iniciar sessão</Button>
         <Button variant="ghost" size="sm" loading={busy === 'qr'} onClick={() => run('qr', async () => (await api.get('/admin/whatsapp/qrcode')).data, 'QR Code atualizado.')}>Obter QR Code</Button>
         <Button size="sm" loading={busy === 'test'} onClick={() => run('test', async () => { await api.post('/admin/whatsapp/teste'); return null; }, 'Alerta de teste enviado.')}>Enviar teste</Button>
       </div>

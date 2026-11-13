@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Pencil, Plus, Trash2 } from 'lucide-react';
 import api, { errorMessage } from '../../services/api';
 import { useToast } from '../../context/ToastContext';
+import { useMonicaConfirm } from '../../context/ConfirmContext';
 import { useLoad } from '../../hooks/useLoad';
 import { initials } from '../../utils/format';
 import { Button, Empty, ErrorBox, Field, Loading, Modal, SelectField } from '../UI';
@@ -54,11 +55,12 @@ function HouseTab() {
 
 function PeopleTab() {
   const toast = useToast();
+  const confirm = useMonicaConfirm();
   const { data, loading, error, refresh } = useLoad('/admin/usuarios');
   const [editing, setEditing] = useState(null);
 
   const remove = async (u) => {
-    if (!window.confirm(`Remover ${u.nome}?`)) return;
+    if (!(await confirm({ text: `Remover ${u.nome} da casa? Essa pessoa perde o acesso agora.`, confirmLabel: 'Remover' }))) return;
     try {
       await api.delete(`/admin/usuarios/${u.id}`);
       toast('Usuário removido.');

@@ -1,6 +1,6 @@
 package com.monica.casa.util;
 
-/** Normalização de telefones para o formato exigido pela Evolution API (somente dígitos, com DDI). */
+/** Normalização de telefones para o formato exigido pela WAHA (somente dígitos, com DDI). */
 public final class TelefoneUtil {
 
     private TelefoneUtil() {

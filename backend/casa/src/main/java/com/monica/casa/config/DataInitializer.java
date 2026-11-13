@@ -54,7 +54,7 @@ public class DataInitializer implements CommandLineRunner {
         configuracaoService.garantirPadrao(ConfiguracaoService.NOME_CASA, "Casa Mônica 2050",
                 "Nome exibido no painel e nas mensagens");
         configuracaoService.garantirPadrao(ConfiguracaoService.NOTIFICACOES_WHATSAPP, "true",
-                "Envia alertas ao WhatsApp dos administradores via Evolution API");
+                "Envia alertas ao WhatsApp dos administradores via WAHA");
         configuracaoService.garantirPadrao(ConfiguracaoService.NOTIFICAR_ROTINAS, "true",
                 "Avisa os administradores sempre que uma rotina automática for executada");
     }

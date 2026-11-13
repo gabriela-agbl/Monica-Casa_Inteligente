@@ -28,7 +28,7 @@ public class Usuario {
     @Column(nullable = false)
     private String senha;
 
-    /** Somente dígitos com DDI (ex.: 5511999999999). Usado no envio via Evolution API. */
+    /** Somente dígitos com DDI (ex.: 5511999999999). Usado no envio via WAHA. */
     @Column(nullable = false, unique = true, length = 20)
     private String telefone;
 

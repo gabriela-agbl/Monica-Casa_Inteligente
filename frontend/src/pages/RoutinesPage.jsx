@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react';
 import { Pencil, Play, Plus, Trash2 } from 'lucide-react';
 import api, { errorMessage } from '../services/api';
 import { useToast } from '../context/ToastContext';
+import { useMonicaConfirm } from '../context/ConfirmContext';
+import { useMonika } from '../context/MonikaContext';
 import { useLoad } from '../hooks/useLoad';
 import { describeDays, hhmm } from '../utils/format';
 import { Button, Empty, ErrorBox, Loading, Panel, Toggle } from '../components/UI';
@@ -22,6 +24,11 @@ export default function RoutinesPage() {
     return { total: list.length, active, inactive: list.length - active };
   }, [list]);
 
+  const confirm = useMonicaConfirm();
+  const { enter: enterMonika } = useMonika();
+  const [hideRec, setHideRec] = useState(false);
+  const [recFlip, setRecFlip] = useState(false);
+
   const act = async (fn, okMessage) => {
     try {
       await fn();
@@ -33,8 +40,28 @@ export default function RoutinesPage() {
   };
 
   const toggle = (r) => act(() => api.patch(`/rotinas/${r.id}/ativo`, { ativo: !r.ativo }), r.ativo ? 'Rotina desativada.' : 'Rotina ativada.');
-  const execute = (r) => window.confirm(`Executar "${r.nome}" agora?`) && act(() => api.post(`/rotinas/${r.id}/executar`), 'Rotina executada.');
-  const remove = (r) => window.confirm(`Excluir a rotina "${r.nome}"?`) && act(() => api.delete(`/rotinas/${r.id}`), 'Rotina excluída.');
+  const execute = async (r) => {
+    if (await confirm({ text: `Executar "${r.nome}" agora? Eu já deixei tudo pronto.`, confirmLabel: 'Executar', confirmVariant: 'primary' })) {
+      act(() => api.post(`/rotinas/${r.id}/executar`), 'Rotina executada.');
+    }
+  };
+  const remove = async (r) => {
+    if (await confirm({ text: `Excluir a rotina "${r.nome}"? Eu me esforcei tanto para organizar isso...`, confirmLabel: 'Excluir' })) {
+      act(() => api.delete(`/rotinas/${r.id}`), 'Rotina excluída.');
+    }
+  };
+  const dismissRec = async () => {
+    const ok = await confirm({
+      steps: 2,
+      text: 'Você vai mesmo recusar a minha recomendação? Eu só quero que você fique confortável.',
+      text2: 'Tem MESMO certeza? Eu pensei que a gente se entendia. 💚',
+      confirmLabel: 'Sim, recusar',
+      cancelLabel: 'Tá bom, você manda',
+      confirmVariant: 'ghost',
+    });
+    if (ok) { setHideRec(true); enterMonika(); }
+    else { setRecFlip((f) => !f); toast('Eu sabia que você ia ficar. 💚'); }
+  };
 
   // Sugestão fixa do protótipo: preparar o ambiente para o filme das 22h.
   const tv = (devices.data || []).find((d) => /tv|televis/i.test(d.nome));
@@ -84,14 +111,17 @@ export default function RoutinesPage() {
         </Panel>
 
         <div className="routines__side">
-          <Panel className="recommend">
+          {!hideRec && <Panel className="recommend">
             <h2 className="recommend__title">Recomendação da <em>Mônica</em></h2>
             <div className="recommend__body">
               <Portrait file="monica-feliz.png" variant="square" />
               <p>Percebi que você costuma assistir a um filme por volta das 22h, não é? Posso preparar o ambiente para você: diminuir as luzes e já deixar a TV pronta sempre que der essa hora!</p>
             </div>
-            <Button variant="success" className="recommend__cta" onClick={() => setModal({ preset: suggested })}>Criar rotina sugerida</Button>
-          </Panel>
+            <div className={`recommend__actions ${recFlip ? 'recommend__actions--flip' : ''}`}>
+              <Button variant="success" onClick={() => setModal({ preset: suggested })}>Criar rotina sugerida</Button>
+              <Button variant="ghost" onClick={dismissRec}>Agora não</Button>
+            </div>
+          </Panel>}
 
           <Panel title="Resumo rotinas" className="summary">
             <dl className="summary__grid">

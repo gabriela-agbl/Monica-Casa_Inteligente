@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgrespassword
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       # Executa o script init.sql automaticamente ao criar o container
@@ -28,6 +28,8 @@ services:
       WAHA_DASHBOARD_PASSWORD: ${WAHA_DASHBOARD_PASSWORD}
       WAHA_PRINT_QR: "False"
       WHATSAPP_DEFAULT_ENGINE: WEBJS
+      # WAHA Core (gratuita) aceita apenas UMA sessão, chamada "default"
+      WHATSAPP_START_SESSION: default
     volumes:
       - waha_sessions:/app/.sessions
 

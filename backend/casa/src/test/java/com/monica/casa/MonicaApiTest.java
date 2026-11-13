@@ -1,7 +1,7 @@
 package com.monica.casa;
 
 import com.jayway.jsonpath.JsonPath;
-import com.monica.casa.service.EvolutionApiService;
+import com.monica.casa.service.WahaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ class MonicaApiTest {
     WebApplicationContext context;
 
     @MockitoBean
-    EvolutionApiService evolutionApiService; // evita chamadas HTTP reais ao WhatsApp
+    WahaService wahaService; // evita chamadas HTTP reais ao WhatsApp
 
     MockMvc mvc;
 

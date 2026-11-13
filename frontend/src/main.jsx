@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
+import { MonicaConfirmProvider } from './context/ConfirmContext';
+import { MonikaProvider } from './context/MonikaContext';
 import AppLayout from './layouts/AppLayout';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -28,7 +30,9 @@ function App() {
   return (
     <BrowserRouter>
       <ToastProvider>
+        <MonicaConfirmProvider>
         <AuthProvider>
+          <MonikaProvider>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/cadastro" element={<RegisterPage />} />
@@ -42,7 +46,9 @@ function App() {
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          </MonikaProvider>
         </AuthProvider>
+        </MonicaConfirmProvider>
       </ToastProvider>
     </BrowserRouter>
   );

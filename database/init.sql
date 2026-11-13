@@ -1,6 +1,3 @@
--- 0. Banco usado pela Evolution API (DATABASE_CONNECTION_URI do docker-compose aponta para evolution_db)
-CREATE DATABASE evolution_db;
-
 -- 1. Criar tabela de Usuarios
 CREATE TABLE IF NOT EXISTS usuarios (
     id BIGSERIAL PRIMARY KEY,

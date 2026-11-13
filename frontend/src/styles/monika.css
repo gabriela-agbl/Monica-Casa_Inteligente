@@ -1,0 +1,66 @@
+/* Modo Just Monika: app invertido + bloqueio + caixa de diálogo dela. */
+
+html.just-monika {
+  filter: invert(1) hue-rotate(180deg) contrast(1.08);
+  transition: filter 0.6s ease;
+}
+html.just-monika #root { animation: monika-shake 0.7s 1; }
+@keyframes monika-shake {
+  0%, 100% { transform: none; }
+  15% { transform: translate(-6px, 3px); }
+  30% { transform: translate(7px, -4px); }
+  45% { transform: translate(-5px, -3px); }
+  60% { transform: translate(4px, 5px); }
+  80% { transform: translate(-2px, 1px); }
+}
+
+/* O overlay se inverte de novo: fica com as cores "normais" por cima do app invertido. */
+.monika {
+  position: fixed; inset: 0; z-index: 9999;
+  filter: invert(1) hue-rotate(180deg);
+  font-family: inherit;
+}
+.monika__dim {
+  position: absolute; inset: 0; cursor: not-allowed;
+  background: rgba(0, 0, 0, 0.16);
+  box-shadow: inset 0 0 220px rgba(214, 28, 35, 0.6);
+}
+.monika__banner {
+  position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
+  font-size: 30px; letter-spacing: 0.22em; color: #ff3b45; pointer-events: none;
+  text-shadow: 0 0 18px rgba(214, 28, 35, 0.8);
+}
+.monika__box {
+  position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%);
+  width: min(780px, calc(100% - 28px));
+  display: flex; align-items: center; gap: 18px; padding: 16px 20px;
+  background: rgba(8, 12, 18, 0.95);
+  border: 1px solid #d61c23; border-radius: 18px;
+  box-shadow: 0 0 44px rgba(214, 28, 35, 0.5);
+}
+.monika__box .portrait { flex: none; width: 124px; height: 124px; min-height: 124px; box-shadow: 0 0 18px rgba(214, 28, 35, 0.6); }
+.monika__talk { flex: 1; min-width: 0; display: grid; gap: 8px; }
+.monika__name { color: #ff5a62; font-size: 15px; letter-spacing: 0.08em; }
+.monika__text { color: #f4f4f4; font-size: 19px; line-height: 1.35; min-height: 3.1em; }
+.monika__cursor { display: inline-block; width: 9px; height: 1.05em; margin-left: 3px; vertical-align: -2px; background: #ff3b45; animation: monika-blink 0.9s steps(1) infinite; }
+@keyframes monika-blink { 50% { opacity: 0; } }
+.monika__form { display: flex; gap: 10px; }
+.monika__form input {
+  flex: 1; min-width: 0; height: 42px; padding: 0 14px; color: #fff; font: inherit;
+  background: #0d141c; border: 1px solid #3a4756; border-radius: 12px;
+}
+.monika__form input:focus { outline: none; border-color: #ff3b45; }
+.monika__form button {
+  height: 42px; padding: 0 20px; color: #fff; font: inherit; cursor: pointer;
+  background: #d61c23; border: 0; border-radius: 12px;
+}
+.monika__form button:disabled, .monika__form input:disabled { opacity: 0.5; cursor: default; }
+
+@media (max-width: 600px) {
+  .monika__box { flex-direction: column; text-align: center; }
+  .monika__banner { font-size: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html.just-monika #root { animation: none; }
+  .monika__cursor { animation: none; }
+}

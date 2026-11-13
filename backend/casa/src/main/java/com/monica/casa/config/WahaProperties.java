@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @Component
 @ConfigurationProperties(prefix = "waha")
-public class EvolutionProperties {
+public class WahaProperties {
 
     private boolean enabled = true;
 

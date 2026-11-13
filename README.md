@@ -28,12 +28,14 @@ Projeto da categoria **INTELLIGENCE (4º semestre, Ciência da Computação)** d
 
 ## 🚀 Como usar
 
-**Você precisa de:** Docker, Java 17+ e (opcional) um celular para conectar o WhatsApp.
+**Você precisa de:** Docker, Java 17+, Node.js 18+ e (opcional) um celular para conectar o WhatsApp.
 
-**1. Suba o banco de dados e a Evolution API (WhatsApp)**
+**1. Configure as chaves e suba o banco de dados e a WAHA (WhatsApp)**
 ```bash
+cp .env.example .env        # edite WAHA_API_KEY e a senha do painel da WAHA
 docker compose up -d
 ```
+O PostgreSQL sobe na porta `5432` e a WAHA em `http://localhost:3000` (painel em `/dashboard`).
 
 **2. Inicie a Mônica**
 ```bash
@@ -43,28 +45,26 @@ cd backend/casa
 A API fica em `http://localhost:8080`. Na primeira execução, a Mônica cria um administrador de demonstração:
 `admin@monica.local` / `admin123` *(troque a senha e o telefone em `application.properties` antes de usar de verdade)*.
 
-**3. Cadastre um dispositivo**
+**3. Inicie o painel web**
 ```bash
-curl -u admin@monica.local:admin123 -X POST http://localhost:8080/api/dispositivos \
-  -H "Content-Type: application/json" \
-  -d '{"nome":"Luz da Sala","tipo":"ILUMINACAO","comodo":"Sala","acessoConvidado":true}'
+cd frontend
+cp .env.example .env
+npm install
+npm run dev
 ```
+Acesse `http://localhost:5173` e entre com o administrador de demonstração. Pelo painel você cadastra dispositivos, cria rotinas (ou executa uma na hora), libera dispositivos para convidados e acompanha alertas e histórico.
 
-**4. Agende uma rotina**
-```bash
-curl -u admin@monica.local:admin123 -X POST http://localhost:8080/api/rotinas \
-  -H "Content-Type: application/json" \
-  -d '{"nome":"Acender a sala","horario":"18:30","diasSemana":"SEG,TER,QUA,QUI,SEX","acao":"LIGAR","dispositivoId":1}'
-```
-Quer ver funcionando agora? Dispare a rotina na hora: `POST /api/rotinas/1/executar`.
+**4. Conecte o WhatsApp (opcional)**
+No painel web: **Configurações → Segurança**. A tela mostra o QR Code sozinha quando a sessão estiver aguardando pareamento; abra o WhatsApp no celular em *Aparelhos conectados* e escaneie. Quando o status ficar **Conectado**, clique em *Enviar teste*.
 
-**5. Conecte o WhatsApp (opcional)**
-Crie a instância em `POST /api/admin/whatsapp/instancia`, leia o QR Code em `GET /api/admin/whatsapp/qrcode` e escaneie com o WhatsApp. Teste em `POST /api/admin/whatsapp/teste`.
+Pela API: `GET /api/admin/whatsapp/status` (estado), `POST /api/admin/whatsapp/instancia` (garante a sessão), `GET /api/admin/whatsapp/qrcode` (QR em base64) e `POST /api/admin/whatsapp/teste`.
+
+> A WAHA Core (gratuita) aceita **uma única sessão, chamada `default`**. Se aparecer erro 401, confira se `WAHA_API_KEY` no `.env` é a mesma usada no `docker compose`.
 
 ## 🧰 Tecnologias
 
-**Java 17 · Spring Boot (Web, Security, Data JPA, Scheduled) · PostgreSQL · Docker · Evolution API (WhatsApp)**
-Interface web: React + Tailwind CSS *(em desenvolvimento)*. Protótipo no Figma e gestão no Trello.
+**Java 17 · Spring Boot (Web, Security, Data JPA, Scheduled) · PostgreSQL · Docker · WAHA (WhatsApp)**
+Interface web: React + Tailwind CSS. Protótipo no Figma e gestão no Trello.
 
 ## 📚 Quer saber mais?
 

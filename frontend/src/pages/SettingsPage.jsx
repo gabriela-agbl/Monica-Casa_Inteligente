@@ -114,7 +114,7 @@ export default function SettingsPage() {
                     checked={isOn(KEY_NOTIFY)}
                     disabled={!isAdmin}
                     label="Notificações do assistente"
-                    onChange={(v) => setFlag(KEY_NOTIFY, 'Envia alertas ao WhatsApp dos administradores via Evolution API', v)}
+                    onChange={(v) => setFlag(KEY_NOTIFY, 'Envia alertas ao WhatsApp dos administradores via WAHA', v)}
                   />
                 </label>
                 <label className="toggle-row">

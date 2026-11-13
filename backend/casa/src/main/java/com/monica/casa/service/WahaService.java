@@ -1,7 +1,7 @@
 
 package com.monica.casa.service;
 
-import com.monica.casa.config.EvolutionProperties;
+import com.monica.casa.config.WahaProperties;
 import com.monica.casa.exception.IntegracaoExternaException;
 import com.monica.casa.exception.RegraNegocioException;
 import com.monica.casa.util.TelefoneUtil;
@@ -20,17 +20,17 @@ import java.util.Map;
 
 @Slf4j
 @Service
-public class EvolutionApiService {
+public class WahaService {
 
     private static final ParameterizedTypeReference<Map<String, Object>> MAPA =
             new ParameterizedTypeReference<>() {};
 
-    private final EvolutionProperties props;
+    private final WahaProperties props;
     private final RestClient client;
 
-    public EvolutionApiService(
-            EvolutionProperties props,
-            @Qualifier("evolutionRestClient") RestClient client) {
+    public WahaService(
+            WahaProperties props,
+            @Qualifier("wahaRestClient") RestClient client) {
         this.props = props;
         this.client = client;
     }
@@ -109,6 +109,9 @@ public class EvolutionApiService {
 
             return resultado;
 
+        } catch (HttpClientErrorException.Unauthorized e) {
+            throw new IntegracaoExternaException(
+                    "WAHA recusou a chave (401). Confira WAHA_API_KEY no .env.", e);
         } catch (RestClientException e) {
             throw new IntegracaoExternaException(
                     "WAHA indisponível ou sessão inexistente: "
@@ -166,6 +169,14 @@ public class EvolutionApiService {
      */
     public Map<String, Object> obterQrCode() {
         exigirHabilitada();
+
+        // O QR só existe enquanto a sessão está em SCAN_QR_CODE.
+        Object status = estadoConexao().get("status");
+        if (!"SCAN_QR_CODE".equalsIgnoreCase(String.valueOf(status))) {
+            throw new RegraNegocioException(
+                    "A sessão está em '" + status + "'. O QR Code só fica disponível em SCAN_QR_CODE; "
+                            + "se já estiver WORKING, o WhatsApp já está conectado.");
+        }
 
         try {
             Map<String, Object> resposta = client.get()
