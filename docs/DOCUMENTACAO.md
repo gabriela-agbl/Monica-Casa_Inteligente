@@ -35,6 +35,9 @@ O projeto **Mônica** foi concebido para ser o painel central de uma casa inteli
 
 ### 📊 Painel Central
 - Resumo com total de dispositivos, dispositivos ligados, rotinas ativas, alertas das últimas 24 horas e total de usuários.
+- **Home:** resumo da casa, rotinas favoritas, ações rápidas, atalhos de dispositivos e a **Assistente Mônica**, que sugere ações a partir de regras locais (por exemplo, desligar um dispositivo ligado há muitas horas ou ativar o modo noturno à noite), sem usar IA externa.
+- **Consumo de energia (estimado):** o back-end não mede consumo. O front **estima** os kWh a partir do histórico de acionamentos (tempo ligado × potência típica por tipo de dispositivo, em `utils/energy.js`).
+- **Temperatura:** valor fixo do protótipo (não há sensor). Está marcado no código (`HomePage.jsx`) para ser trocado por uma leitura real.
 
 ---
 
@@ -225,6 +228,7 @@ Autenticação: **HTTP Basic** (e-mail e senha). Erros seguem o formato `{status
 
 - **Alertas no WhatsApp:** cada mensagem termina com uma fala da Mônica sorteada pela gravidade (`AlertaService.FALAS`).
 - **"Tem certeza?":** `ConfirmContext` substitui o `window.confirm`. Ao ignorar uma sugestão ("Agora não") a Mônica pergunta duas vezes, a ordem dos botões é sorteada e inverte a cada etapa; se o usuário desiste, ela troca os botões de lado e comenta.
+- **Modo "Just Monika" (easter egg):** ao ser ativado, a Mônica passa a falar e a agir sozinha na tela (`MonikaContext`, `MonikaOverlay`). O estado fica só na aba do navegador. **Saída de emergência:** abrir o endereço com `?paz` (por exemplo, `http://localhost:5173/?paz`) desativa o modo.
 - **Glitch nos erros:** toasts de erro mostram uma fala da Mônica com efeito glitch (`styles/monica.css`; respeita `prefers-reduced-motion`).
 
 ### 9.1 Conectando o WhatsApp (WAHA)
@@ -238,7 +242,51 @@ Mapeamento de estados (`WahaService.estadoConexao`): `WORKING → open`, `STARTI
 
 ---
 
-## 10. Próximas Etapas
-- [ ] **Protótipo Figma:** Links e previews das telas finalizadas (incluindo histórico, "liberar para convidados", configurações de WhatsApp e dashboard).
-- [ ] **Front-end React:** consumo da API descrita na seção 8.
-- [ ] **Evolução futura:** autenticação com JWT em substituição ao HTTP Basic
+## 10. Interface e Protótipo
+
+O protótipo foi desenhado no Figma (lo-fi e hi-fi) e o front-end implementa as mesmas telas.
+
+**Protótipo no Figma:** [colocar o link do Figma aqui]
+
+| Tela | Rota | Quem acessa | O que faz |
+|---|---|---|---|
+| Login | `/login` | Público | Entrar com e-mail e senha. Os botões sociais e "Esqueceu a senha?" apenas avisam que a função ainda não existe |
+| Cadastro | `/cadastro` | Público | Cria conta com perfil Comum |
+| Home | `/` | Todos | Resumo, rotinas favoritas, ações rápidas, dispositivos e Assistente Mônica |
+| Dispositivos | `/dispositivos` | Todos (Comum só vê os liberados) | Lista, busca, filtro por cômodo, liga/desliga, cadastro e edição (Admin), consumo estimado |
+| Rotinas | `/rotinas` | Admin | Cria, edita, ativa/pausa e executa rotinas; recomendação da Mônica |
+| Alertas | `/alertas` | Admin | Central de alertas com filtros e resumo |
+| Histórico | `/historico` | Admin | Quem acionou cada dispositivo e quando |
+| Configurações | `/configuracoes` | Todos (Comum só vê a própria conta) | Conta, casa, assistente, segurança e conexão com o WhatsApp |
+
+Telas finais (exportadas do Figma): ver [`mockups/`](./mockups/).
+
+---
+
+## 11. Limitações Conhecidas
+
+- **Consumo de energia:** estimado pelo front, não medido.
+- **Temperatura:** valor fixo no protótipo, sem sensor.
+- **Dispositivos:** o estado (ligado/desligado) é registrado no banco; ainda não há comunicação com aparelhos físicos.
+- **Login social e recuperação de senha:** apenas visuais. A redefinição de senha é feita por um morador (Administrador).
+- **Autenticação:** HTTP Basic, adequada para o protótipo e para uso local.
+
+---
+
+## 12. Próximas Etapas
+
+**Concluído**
+- [x] API REST com perfis Admin/Comum, dispositivos, rotinas automáticas, alertas, histórico e usuários
+- [x] Notificações por WhatsApp (WAHA)
+- [x] Front-end React com as telas do Figma
+- [x] Protótipo no Figma (lo-fi e hi-fi)
+- [x] Modelagem de dados e fluxograma
+
+**A fazer**
+- [ ] Vídeo pitch da ExpoTech
+- [ ] Integrar dispositivos reais (por exemplo, uma lâmpada com ESP32 via MQTT ou HTTP), para o estado deixar de ser só simulado
+- [ ] Ler temperatura e consumo de sensores reais em vez de valores fixos e estimativas
+- [ ] Trocar HTTP Basic por JWT (com refresh e logout no servidor)
+- [ ] Recuperação de senha por e-mail ou WhatsApp e login social
+- [ ] Testes automatizados no front-end
+- [ ] Publicação em servidor (HTTPS) para uso fora da rede local
