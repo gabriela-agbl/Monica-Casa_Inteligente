@@ -3,6 +3,10 @@ Imagine chegar em casa e ela já saber o que você precisa. Mônica é o painel 
 
 ## "Just Monika." 💚
 
+<p align="center">
+  <img src="assets/monica-demo-optimized.gif" alt="Mônica, a assistente da casa inteligente" width="480">
+</p>
+
 ---
 
 ## ✨ O que a Mônica faz
